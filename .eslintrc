@@ -1,0 +1,35 @@
+{
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "globals": {
+    "NODE_ENV": true
+  },
+  "extends": [
+    "standard",
+    "plugin:vue/recommended",
+    "prettier",
+    "prettier/standard"
+  ],
+  "plugins": ["vue", "prettier"],
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "es5",
+        "singleQuote": true,
+        "semi": false
+      }
+    ],
+    "vue/mustache-interpolation-spacing": 0,
+    "vue/require-prop-types": 0,
+    "vue/require-default-prop": 0
+  }
+}

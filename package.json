@@ -1,0 +1,53 @@
+{
+  "name": "vew",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "description": "Just another vue-based frontend boilerplate.",
+  "scripts": {
+    "dev": "NODE_ENV=development npx webpack-dev-server",
+    "build": "npx rimraf ./dist && NODE_ENV=production npx webpack",
+    "eslint": "npx eslint src/**/*.js src/**/*.vue",
+    "stylelint": "npx stylelint src/**/*.vue src/**/*.css",
+    "prettier": "npx prettier src/**/*.js src/**/*.vue --write"
+  },
+  "devDependencies": {
+    "autoprefixer": "^8.6.0",
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^0.28.11",
+    "eslint": "^4.19.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "eslint-plugin-vue": "^4.5.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^4.0.0-alpha",
+    "postcss": "^6.0.22",
+    "postcss-loader": "^2.1.5",
+    "postcss-preset-env": "^5.1.0",
+    "prettier": "^1.13.5",
+    "rimraf": "^2.6.2",
+    "simple-progress-webpack-plugin": "^1.1.2",
+    "style-loader": "^0.21.0",
+    "url-loader": "^1.0.1",
+    "vue-loader": "14.2.2",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^4.10.2",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-cli": "^3.0.1",
+    "webpack-dev-server": "^3.1.4"
+  },
+  "dependencies": {
+    "vue": "^2.5.16"
+  }
+}

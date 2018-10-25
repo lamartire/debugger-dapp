@@ -169,12 +169,16 @@ export default {
         </button>
       </section>
       <section>
-        <!-- <button
+        Signing with eth_sign:
+        <button
           :disabled="!from || !message"
           @click="sign"
         >
           Sign
-        </button> -->
+        </button>
+      </section>
+      <section>
+        Personal signing:
         <button
           :disabled="!from || !message"
           @click="personalSign"
@@ -189,6 +193,7 @@ export default {
         </button>
       </section>
       <section>
+        Reset form:
         <button @click="reset">Reset</button>
       </section>
     </template>

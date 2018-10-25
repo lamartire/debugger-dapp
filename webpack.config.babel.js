@@ -36,7 +36,9 @@ const config = {
 
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin({
+      multiStep: true,
+    }),
     new webpack.NodeEnvironmentPlugin('NODE_ENV'),
     new SimpleProgressWebpackPlugin({
       format: ENV === 'development' ? 'minimal' : 'compact',
@@ -106,18 +108,13 @@ const config = {
 
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader'],
+        loaders: ['style-loader', 'css-loader', 'postcss-loader'],
       },
     ],
   },
 }
 
 if (ENV === 'development') {
-  config.module.rules.push({
-    test: /\.css$/,
-    loaders: ['vue-style-loader', 'css-loader', 'postcss-loader'],
-  })
-
   config.plugins.push(
     new BundleAnalyzerPlugin({
       openAnalyzer: false,
@@ -129,7 +126,6 @@ if (ENV === 'production') {
   config.module.rules.push({
     test: /\.css$/,
     loader: ExtractTextPlugin.extract({
-      fallback: 'vue-style-loader',
       use: 'css-loader?importLoaders=1&minimize=1!postcss-loader',
     }),
   })

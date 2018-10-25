@@ -82,7 +82,7 @@ class App extends Component {
     web3.currentProvider.sendAsync(
       {
         method: 'eth_sign',
-        params: [from, web3.toHex(message)],
+        params: [from, `0x${Buffer.from(message, 'utf8').toString('hex')}`],
       },
       (err, { result }) => {
         if (err) {
@@ -105,7 +105,7 @@ class App extends Component {
     web3.currentProvider.sendAsync(
       {
         method: 'personal_sign',
-        params: [from, web3.toHex(message)],
+        params: [from, `0x${Buffer.from(message, 'utf8').toString('hex')}`],
       },
       (err, { result }) => {
         if (err) {

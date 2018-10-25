@@ -20,7 +20,7 @@ class App extends Component {
     this.requestAccount = this.requestAccount.bind(this)
   }
 
-  componentDidMount() {
+  unsafe_componentWillMount() {
     Notification.requestPermission()
 
     this.checkWeb3()

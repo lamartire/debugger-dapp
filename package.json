@@ -9,7 +9,8 @@
     "build": "npx rimraf ./dist && NODE_ENV=production npx webpack",
     "eslint": "npx eslint src/**/*.js src/**/*.vue",
     "stylelint": "npx stylelint src/**/*.vue src/**/*.css",
-    "prettier": "npx prettier src/**/*.js src/**/*.vue --write"
+    "prettier": "npx prettier src/**/*.js src/**/*.vue --write",
+    "deploy": "npx rimraf ./dist && NODE_ENV=publishing npx webpack && node scripts/deploy.js"
   },
   "devDependencies": {
     "autoprefixer": "^8.6.0",

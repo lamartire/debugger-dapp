@@ -18,11 +18,11 @@ const DIST_PATH = path.resolve(__dirname, './dist')
  * Base configuration
  */
 const config = {
-  mode: ENV,
+  mode: ENV === 'development' ? 'development' : 'production',
 
   output: {
     path: DIST_PATH,
-    publicPath: '/',
+    publicPath: ENV === 'publishing' ? './' : '/',
     filename: ENV === 'development' ? 'js/[name].js' : 'js/[name].js?[hash:16]',
   },
 

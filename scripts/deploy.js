@@ -9,5 +9,8 @@ ghPages.publish(path.resolve(__dirname, '../dist'), err => {
     console.error(err)
   } else {
     console.info('Successfully published! ✨')
+    console.info(
+      `Check result here: https://lamartire.github.io/web3-debugger-dapp/`
+    )
   }
 })

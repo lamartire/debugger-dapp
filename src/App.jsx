@@ -9,9 +9,8 @@ class App extends Component {
       message: '',
       signature: '',
       accounts: [],
-      error: false,
+      currentId: 1,
     }
-    this.checkWeb3 = this.checkWeb3.bind(this)
     this.errorNotification = this.errorNotification.bind(this)
     this.sign = this.sign.bind(this)
     this.personalSign = this.personalSign.bind(this)
@@ -20,32 +19,8 @@ class App extends Component {
     this.requestAccount = this.requestAccount.bind(this)
   }
 
-  unsafe_componentWillMount() {
-    Notification.requestPermission()
-
-    this.checkWeb3()
-  }
-
-  checkWeb3() {
-    if (!window.web3) {
-      this.setState({
-        ...this.state,
-        error: true,
-      })
-      return
-    }
-
-    if (web3.eth.accounts.length === 0) {
-      console.info(
-        'Your web3 has not any accounts. Enter some manually or request it.'
-      )
-      return
-    }
-
-    this.setState({
-      ...this.state,
-      accounts: web3.eth.accounts || [],
-    })
+  isNewWeb3() {
+    return !Array.isArray(web3.accounts)
   }
 
   errorNotification() {
@@ -56,14 +31,30 @@ class App extends Component {
     /* eslint-enable */
   }
 
-  verify() {
-    const { message, signature } = this.state
+  makeRequest(method, params, callback) {
+    const { currentId } = this.state
 
     web3.currentProvider.sendAsync(
       {
-        method: 'personal_ecRecover',
-        params: [message, signature],
+        id: currentId,
+        method,
+        params,
       },
+      callback
+    )
+
+    this.setState(state => ({
+      ...state,
+      currentId: state.currentId + 1,
+    }))
+  }
+
+  verify() {
+    const { message, signature } = this.state
+
+    this.makeRequest(
+      'personal_ecRecover',
+      [`0x${Buffer.from(message, 'utf8').toString('hex')}`, signature],
       (err, { result }) => {
         if (err) {
           this.errorNotification()
@@ -79,11 +70,9 @@ class App extends Component {
   sign() {
     const { from, message } = this.state
 
-    web3.currentProvider.sendAsync(
-      {
-        method: 'eth_sign',
-        params: [from, `0x${Buffer.from(message, 'utf8').toString('hex')}`],
-      },
+    this.makeRequest(
+      'eth_sign',
+      [from, `0x${Buffer.from(message, 'utf8').toString('hex')}`],
       (err, { result }) => {
         if (err) {
           this.errorNotification()
@@ -91,22 +80,22 @@ class App extends Component {
           return
         }
 
-        this.setState({
-          ...this.state,
+        this.setState(state => ({
+          ...state,
           signature: result,
-        })
+        }))
       }
     )
   }
 
   personalSign() {
     const { from, message } = this.state
+    const isNewWeb3 = this.isNewWeb3()
+    const params = [from, `0x${Buffer.from(message, 'utf8').toString('hex')}`]
 
-    web3.currentProvider.sendAsync(
-      {
-        method: 'personal_sign',
-        params: [from, `0x${Buffer.from(message, 'utf8').toString('hex')}`],
-      },
+    this.makeRequest(
+      'personal_sign',
+      isNewWeb3 ? params.reverse() : params,
       (err, { result }) => {
         if (err) {
           this.errorNotification()
@@ -114,42 +103,36 @@ class App extends Component {
           return
         }
 
-        this.setState({
-          ...this.state,
+        this.setState(state => ({
+          ...state,
           signature: result,
-        })
+        }))
       }
     )
   }
 
   requestAccount() {
-    web3.currentProvider.sendAsync(
-      {
-        method: 'eth_accounts',
-        params: [],
-      },
-      (err, { result }) => {
-        if (err) {
-          this.errorNotification()
-          console.error(err)
-          return
-        }
-
-        this.setState({
-          ...this.state,
-          accounts: result,
-          from: result[0],
-        })
+    this.makeRequest('eth_accounts', [], (err, { result }) => {
+      if (err) {
+        this.errorNotification()
+        console.error(err)
+        return
       }
-    )
+
+      this.setState(state => ({
+        ...state,
+        accounts: result,
+        from: result[0],
+      }))
+    })
   }
 
   reset() {
-    this.setState({
-      ...this.state,
+    this.setState(state => ({
+      ...state,
       message: '',
       signature: '',
-    })
+    }))
   }
 
   onChangeInputByName(name) {
@@ -169,20 +152,22 @@ class App extends Component {
     const { accounts, from } = this.state
 
     return (
-      <select
-        value={from}
-        disabled={accounts.length === 0}
-        onChange={this.onChangeInputByName('from')}
-      >
-        <option value="" disabled>
-          Select account
-        </option>
-        {accounts.map(account => (
-          <option key={account} value={account}>
-            {account}
+      <section>
+        <select
+          value={from}
+          disabled={accounts.length === 0}
+          onChange={this.onChangeInputByName('from')}
+        >
+          <option value="" disabled>
+            Select account
           </option>
-        ))}
-      </select>
+          {accounts.map(account => (
+            <option key={account} value={account}>
+              {account}
+            </option>
+          ))}
+        </select>
+      </section>
     )
   }
 
@@ -192,7 +177,7 @@ class App extends Component {
     return (
       <Fragment>
         <h1>Sign</h1>
-        <section>{this.renderAccountsSelect()}</section>
+        {this.renderAccountsSelect()}
         <section>
           <input
             value={from}
@@ -241,11 +226,9 @@ class App extends Component {
   }
 
   render() {
-    const { error } = this.state
-
     return (
       <div className="dapp">
-        {error ? this.renderWeb3Error() : this.renderSignForm()}
+        {!window.web3 ? this.renderWeb3Error() : this.renderSignForm()}
       </div>
     )
   }

@@ -23,7 +23,7 @@ const config = {
   output: {
     path: DIST_PATH,
     publicPath: ENV === 'publishing' ? './' : '/',
-    filename: ENV === 'development' ? 'js/[name].js' : 'js/[name].js?[hash:16]',
+    filename: ENV === 'development' ? 'js/[name].js' : 'js/[name].[hash:16].js',
   },
 
   watch: ENV === 'development',
@@ -44,7 +44,7 @@ const config = {
       format: ENV === 'development' ? 'minimal' : 'compact',
     }),
     new ExtractTextPlugin({
-      filename: ENV === 'development' ? 'main.css' : 'main.css?[hash:16]',
+      filename: ENV === 'development' ? 'main.css' : 'main.[hash:16].css',
       allChunks: true,
       disable: ENV === 'development',
     }),

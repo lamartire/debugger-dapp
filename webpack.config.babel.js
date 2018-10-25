@@ -63,7 +63,7 @@ const config = {
 
   resolve: {
     modules: ['node_modules', SOURCE_PATH],
-    extensions: ['.js', '.vue', '.css'],
+    extensions: ['.js', '.jsx', '.vue', '.css'],
   },
 
   optimization: {
@@ -91,14 +91,9 @@ const config = {
     rules: [
       {
         loader: 'babel-loader',
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: [/node_modules/, /\.spec.js$/],
         include: [SOURCE_PATH],
-      },
-
-      {
-        loader: 'vue-loader',
-        test: /\.vue$/,
       },
 
       {
@@ -107,6 +102,11 @@ const config = {
         options: {
           limit: 8000,
         },
+      },
+
+      {
+        test: /\.css$/,
+        loaders: ['style-loader', 'css-loader'],
       },
     ],
   },

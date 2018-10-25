@@ -1,8 +1,6 @@
-import Vue from 'vue'
+import React from 'react'
+import { render } from 'react-dom'
 import App from './App'
+import './main.css'
 
-/* eslint-disable */
-new Vue({
-  el: '#mount-point',
-  render: h => h(App),
-})
+render(<App />, document.getElementById('mount-point'))

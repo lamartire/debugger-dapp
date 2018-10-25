@@ -10,15 +10,16 @@
     "jest": true
   },
   "globals": {
-    "NODE_ENV": true
+    "NODE_ENV": true,
+    "web3": true
   },
   "extends": [
     "standard",
-    "plugin:vue/recommended",
+    "plugin:react/recommended",
     "prettier",
     "prettier/standard"
   ],
-  "plugins": ["vue", "prettier"],
+  "plugins": ["react", "prettier"],
   "rules": {
     "prettier/prettier": [
       "error",
@@ -27,9 +28,6 @@
         "singleQuote": true,
         "semi": false
       }
-    ],
-    "vue/mustache-interpolation-spacing": 0,
-    "vue/require-prop-types": 0,
-    "vue/require-default-prop": 0
+    ]
   }
 }

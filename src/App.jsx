@@ -1,4 +1,34 @@
 import React, { Component, Fragment } from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Card from '@material-ui/core/Card'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Input from '@material-ui/core/Input'
+import Typography from '@material-ui/core/Typography'
+import Grid from '@material-ui/core/Grid'
+
+const styles = theme => ({
+  row: {
+    marginBottom: theme.spacing.unit,
+  },
+  card: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translateX(-50%) translateY(-50%)',
+    padding: theme.spacing.unit,
+    maxWidth: 480,
+    margin: `${theme.spacing.unit}px auto`,
+  },
+  fluid: {
+    width: '100%',
+  },
+  inlineButton: {
+    marginLeft: theme.spacing.unit,
+  },
+})
 
 class App extends Component {
   constructor(props) {
@@ -13,6 +43,7 @@ class App extends Component {
     }
     this.errorNotification = this.errorNotification.bind(this)
     this.sign = this.sign.bind(this)
+    this.signTypedData = this.signTypedData.bind(this)
     this.personalSign = this.personalSign.bind(this)
     this.verify = this.verify.bind(this)
     this.reset = this.reset.bind(this)
@@ -20,7 +51,7 @@ class App extends Component {
   }
 
   isNewWeb3() {
-    return !Array.isArray(web3.accounts)
+    return !Array.isArray(window.web3.accounts)
   }
 
   errorNotification() {
@@ -34,19 +65,35 @@ class App extends Component {
   makeRequest(method, params, callback) {
     const { currentId } = this.state
 
-    web3.currentProvider.sendAsync(
-      {
-        id: currentId,
-        method,
-        params,
-      },
-      callback
-    )
+    if (window.ethereum) {
+      window.ethereum.sendAsync(
+        {
+          id: currentId,
+          method,
+          params,
+        },
+        callback,
+      )
 
-    this.setState(state => ({
-      ...state,
-      currentId: state.currentId + 1,
-    }))
+      this.setState(state => ({
+        ...state,
+        currentId: state.currentId + 1,
+      }))
+    } else {
+      window.web3.currentProvider.sendAsync(
+        {
+          id: currentId,
+          method,
+          params,
+        },
+        callback,
+      )
+
+      this.setState(state => ({
+        ...state,
+        currentId: state.currentId + 1,
+      }))
+    }
   }
 
   verify() {
@@ -63,7 +110,7 @@ class App extends Component {
         }
 
         alert(`Recovered address: ${result}`)
-      }
+      },
     )
   }
 
@@ -84,7 +131,35 @@ class App extends Component {
           ...state,
           signature: result,
         }))
-      }
+      },
+    )
+  }
+
+  signTypedData() {
+    const { from } = this.state
+
+    this.makeRequest(
+      'eth_signTypedData',
+      [
+        JSON.stringify({
+          foo: 'bar',
+        }),
+        from,
+      ],
+      (err, res) => {
+        if (err) {
+          this.errorNotification()
+          console.error(err)
+          return
+        }
+
+        console.log(res)
+
+        // this.setState(state => ({
+        //   ...state,
+        //   signature: result,
+        // }))
+      },
     )
   }
 
@@ -107,7 +182,7 @@ class App extends Component {
           ...state,
           signature: result,
         }))
-      }
+      },
     )
   }
 
@@ -145,93 +220,159 @@ class App extends Component {
   }
 
   renderWeb3Error() {
-    return <h1>Web3 is not exist, provide it before testing!</h1>
+    return (
+      <Typography align="center" variant="h4">
+        Web3 is not exist, provide it before testing!
+      </Typography>
+    )
   }
 
   renderAccountsSelect() {
+    const { classes } = this.props
     const { accounts, from } = this.state
 
     return (
-      <section>
-        <select
-          value={from}
-          disabled={accounts.length === 0}
-          onChange={this.onChangeInputByName('from')}
-        >
-          <option value="" disabled>
-            Select account
-          </option>
-          {accounts.map(account => (
-            <option key={account} value={account}>
-              {account}
-            </option>
-          ))}
-        </select>
-      </section>
+      <Select
+        className={classes.fluid}
+        value={from}
+        disabled={accounts.length === 0}
+        onChange={this.onChangeInputByName('from')}
+      >
+        <MenuItem value="" disabled>
+          Select account
+        </MenuItem>
+        {accounts.map(account => (
+          <MenuItem key={account} value={account}>
+            {account}
+          </MenuItem>
+        ))}
+      </Select>
     )
   }
 
   renderSignForm() {
+    const { classes } = this.props
     const { from, message, signature } = this.state
 
     return (
       <Fragment>
-        <h1>Sign</h1>
+        <Typography align="center" variant="h4">
+          Debug something
+        </Typography>
         {this.renderAccountsSelect()}
-        <section>
-          <input
-            value={from}
-            type="text"
-            placeholder="Or enter it manually"
-            onChange={this.onChangeInputByName('from')}
-          />
-        </section>
-        <section>
-          <textarea
-            disabled={!from}
-            value={message}
-            placeholder="Enter message to sign..."
-            onChange={this.onChangeInputByName('message')}
-          />
-          <textarea
-            value={signature}
-            placeholder="Signed data..."
-            onChange={this.onChangeInputByName('signature')}
-          />
-        </section>
-        <section>
-          <button onClick={this.requestAccount}>Request account</button>
-        </section>
-        <section>
-          <span>Signing with eth_sign:</span>
-          <button disabled={!from || !message} onClick={this.sign}>
-            Sign
-          </button>
-        </section>
-        <section>
-          <span>Personal signing:</span>
-          <button disabled={!from || !message} onClick={this.personalSign}>
-            Personal sign
-          </button>
-          <button disabled={!signature} onClick={this.verify}>
-            Verify
-          </button>
-        </section>
-        <section>
-          <span>Reset form:</span>
-          <button onClick={this.reset}>Reset</button>
-        </section>
+        <Grid className={classes.row} container>
+          <Grid item xs={6}>
+            <Input
+              multiline
+              rows={5}
+              maxRows={5}
+              className={classes.fluid}
+              disabled={!from}
+              value={message}
+              placeholder="Enter message to sign..."
+              onChange={this.onChangeInputByName('message')}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Input
+              multiline
+              rows={5}
+              maxRows={5}
+              className={classes.fluid}
+              value={signature}
+              placeholder="Signed data..."
+              onChange={this.onChangeInputByName('signature')}
+            />
+          </Grid>
+        </Grid>
+        <Button
+          className={[classes.fluid, classes.row]}
+          color="primary"
+          variant="contained"
+          onClick={this.requestAccount}
+        >
+          Request account
+        </Button>
+        <FormControlLabel
+          className={classes.row}
+          label="Signing with eth_sign:"
+          labelPlacement="start"
+          control={
+            <Button
+              className={classes.inlineButton}
+              variant="contained"
+              disabled={!from || !message}
+              onClick={this.sign}
+            >
+              Sign
+            </Button>
+          }
+        />
+        <FormControlLabel
+          className={classes.row}
+          label="Signing typed data (eth_signTypedData):"
+          labelPlacement="start"
+          control={
+            <Button
+              className={classes.inlineButton}
+              variant="contained"
+              disabled={!from}
+              onClick={this.signTypedData}
+            >
+              Sign typed data
+            </Button>
+          }
+        />
+        <FormControlLabel
+          className={classes.row}
+          label="Personal signing:"
+          labelPlacement="start"
+          control={
+            <Button
+              className={classes.inlineButton}
+              variant="contained"
+              disabled={!from || !message}
+              onClick={this.personalSign}
+            >
+              Personal sign
+            </Button>
+          }
+        />
+        <FormControlLabel
+          className={classes.row}
+          label="Verify signed message:"
+          labelPlacement="start"
+          control={
+            <Button
+              className={classes.inlineButton}
+              variant="contained"
+              disabled={!signature}
+              onClick={this.verify}
+            >
+              Verify
+            </Button>
+          }
+        />
+        <Button
+          className={classes.fluid}
+          variant="contained"
+          onClick={this.reset}
+        >
+          Reset
+        </Button>
       </Fragment>
     )
   }
 
   render() {
+    const { classes } = this.props
+
     return (
-      <div className="dapp">
+      <Card className={classes.card}>
         {!window.web3 ? this.renderWeb3Error() : this.renderSignForm()}
-      </div>
+      </Card>
     )
   }
 }
 
-export default App
+export default withStyles(styles)(App)

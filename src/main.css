@@ -1,36 +1,11 @@
-body {
-  font-family: monospace;
-  background-color: #efdb21;
-}
-
-.dapp {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  max-width: 480px;
-  padding: 15px;
-  border: 1px solid #000;
-  text-align: center;
-  background-color: #ffec44;
-}
-
-.dapp section {
-  margin-bottom: 10px;
-}
-
-.dapp input,
-.dapp select {
-  width: 100%;
+*,
+input,
+textarea {
   box-sizing: border-box;
 }
 
-.dapp textarea {
-  width: 200px;
-  height: 300px;
-  resize: none;
-}
-
-.dapp section > *:not(:first-child) {
-  margin-left: 5px;
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #3f51b5;
 }

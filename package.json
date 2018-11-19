@@ -1,55 +1,26 @@
 {
-  "name": "web3-debugger-dapp",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "description": "Simple dapp for debugging web3 requests to web3.",
-  "scripts": {
-    "dev": "NODE_ENV=development npx webpack-dev-server",
-    "build": "npx rimraf ./dist && NODE_ENV=production npx webpack",
-    "eslint": "npx eslint src/**/*.js src/**/*.jsx",
-    "prettier": "npx prettier src/**/*.js src/**/*.jsx --write",
-    "deploy": "npx rimraf ./dist && NODE_ENV=publishing npx webpack && node scripts/deploy.js"
-  },
-  "devDependencies": {
-    "autoprefixer": "^8.6.0",
-    "babel": "^6.23.0",
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^8.2.3",
-    "babel-loader": "^7.1.4",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "css-loader": "^1.0.0",
-    "eslint": "^4.19.1",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.12.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-prettier": "^2.6.0",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-react": "^7.11.1",
-    "eslint-plugin-standard": "^3.1.0",
-    "extract-text-webpack-plugin": "^4.0.0-beta.0",
-    "file-loader": "^1.1.11",
-    "gh-pages": "^2.0.1",
-    "html-webpack-plugin": "^4.0.0-alpha",
-    "postcss": "^6.0.22",
-    "postcss-loader": "^2.1.5",
-    "postcss-preset-env": "^5.1.0",
-    "prettier": "^1.13.5",
-    "rimraf": "^2.6.2",
-    "simple-progress-webpack-plugin": "^1.1.2",
-    "style-loader": "^0.23.1",
-    "url-loader": "^1.0.1",
-    "webpack": "^4.10.2",
-    "webpack-bundle-analyzer": "^2.13.1",
-    "webpack-cli": "^3.0.1",
-    "webpack-dev-server": "^3.1.4"
-  },
+  "name": "web3-dapp-debugger",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0"
-  }
+    "@material-ui/core": "^3.5.1",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-scripts": "2.1.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

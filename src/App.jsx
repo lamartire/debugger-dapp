@@ -1,9 +1,13 @@
 import React, { Component, Fragment } from 'react'
+
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
+import FormLabel from '@material-ui/core/FormLabel'
+import FormControl from '@material-ui/core/FormControl'
+import FormGroup from '@material-ui/core/FormGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Input from '@material-ui/core/Input'
 import Typography from '@material-ui/core/Typography'
@@ -11,6 +15,14 @@ import Grid from '@material-ui/core/Grid'
 
 const styles = theme => ({
   row: {
+    marginBottom: theme.spacing.unit,
+    width: '100%',
+  },
+  field: {
+    display: 'flex',
+    width: '100%',
+    marginRight: 0,
+    marginLeft: 0,
     marginBottom: theme.spacing.unit,
   },
   card: {
@@ -26,6 +38,7 @@ const styles = theme => ({
     width: '100%',
   },
   inlineButton: {
+    flex: '1 1 auto',
     marginLeft: theme.spacing.unit,
   },
 })
@@ -109,7 +122,7 @@ class App extends Component {
           return
         }
 
-        alert(`Recovered address: ${result}`)
+        alert(`Address verified. Recovered address: ${result}`)
       },
     )
   }
@@ -138,12 +151,41 @@ class App extends Component {
   signTypedData() {
     const { from } = this.state
 
+    this.setState({
+      ...this.state,
+      message: JSON.stringify(
+        [
+          {
+            type: 'string',
+            name: 'Message',
+            value: 'Hi, Alice!',
+          },
+          {
+            type: 'uint32',
+            name: 'A number',
+            value: '1337',
+          },
+        ],
+        null,
+        2,
+      ),
+    })
+
     this.makeRequest(
       'eth_signTypedData',
       [
-        JSON.stringify({
-          foo: 'bar',
-        }),
+        [
+          {
+            type: 'string',
+            name: 'Message',
+            value: 'Hi, Alice!',
+          },
+          {
+            type: 'uint32',
+            name: 'A number',
+            value: '1337',
+          },
+        ],
         from,
       ],
       (err, res) => {
@@ -153,12 +195,10 @@ class App extends Component {
           return
         }
 
-        console.log(res)
-
-        // this.setState(state => ({
-        //   ...state,
-        //   signature: result,
-        // }))
+        this.setState(state => ({
+          ...state,
+          signature: res.result,
+        }))
       },
     )
   }
@@ -252,20 +292,20 @@ class App extends Component {
 
   renderSignForm() {
     const { classes } = this.props
-    const { from, message, signature } = this.state
+    const { from, message, signature, accounts } = this.state
+    const isAnyAccountPresent = accounts.length > 0
 
     return (
       <Fragment>
         <Typography align="center" variant="h4">
           Debug something
         </Typography>
-        {this.renderAccountsSelect()}
+        {isAnyAccountPresent && this.renderAccountsSelect()}
         <Grid className={classes.row} container>
           <Grid item xs={6}>
             <Input
               multiline
-              rows={5}
-              maxRows={5}
+              rows={8}
               className={classes.fluid}
               disabled={!from}
               value={message}
@@ -276,8 +316,7 @@ class App extends Component {
           <Grid item xs={6}>
             <Input
               multiline
-              rows={5}
-              maxRows={5}
+              rows={8}
               className={classes.fluid}
               value={signature}
               placeholder="Signed data..."
@@ -286,76 +325,98 @@ class App extends Component {
           </Grid>
         </Grid>
         <Button
-          className={[classes.fluid, classes.row]}
+          className={classes.row}
           color="primary"
           variant="contained"
           onClick={this.requestAccount}
         >
           Request account
         </Button>
-        <FormControlLabel
-          className={classes.row}
-          label="Signing with eth_sign:"
-          labelPlacement="start"
-          control={
-            <Button
-              className={classes.inlineButton}
-              variant="contained"
-              disabled={!from || !message}
-              onClick={this.sign}
-            >
-              Sign
-            </Button>
-          }
-        />
-        <FormControlLabel
-          className={classes.row}
-          label="Signing typed data (eth_signTypedData):"
-          labelPlacement="start"
-          control={
-            <Button
-              className={classes.inlineButton}
-              variant="contained"
-              disabled={!from}
-              onClick={this.signTypedData}
-            >
-              Sign typed data
-            </Button>
-          }
-        />
-        <FormControlLabel
-          className={classes.row}
-          label="Personal signing:"
-          labelPlacement="start"
-          control={
-            <Button
-              className={classes.inlineButton}
-              variant="contained"
-              disabled={!from || !message}
-              onClick={this.personalSign}
-            >
-              Personal sign
-            </Button>
-          }
-        />
-        <FormControlLabel
-          className={classes.row}
-          label="Verify signed message:"
-          labelPlacement="start"
-          control={
-            <Button
-              className={classes.inlineButton}
-              variant="contained"
-              disabled={!signature}
-              onClick={this.verify}
-            >
-              Verify
-            </Button>
-          }
-        />
+        <FormControl className={classes.field} component="fieldset">
+          <FormLabel className={classes.field} component="legend">
+            Common
+          </FormLabel>
+          <FormGroup>
+            <FormControlLabel
+              className={classes.field}
+              label="eth_sign:"
+              labelPlacement="start"
+              control={
+                <Button
+                  className={classes.inlineButton}
+                  variant="contained"
+                  disabled={!from || !message}
+                  onClick={this.sign}
+                >
+                  Sign
+                </Button>
+              }
+            />
+          </FormGroup>
+        </FormControl>
+        <FormControl className={classes.field} component="fieldset">
+          <FormLabel className={classes.field} component="legend">
+            Legacy typed data (EIP-712 jsonrpc accepted standard)
+          </FormLabel>
+          <FormGroup>
+            <FormControlLabel
+              className={classes.field}
+              label="eth_signTypedData:"
+              labelPlacement="start"
+              control={
+                <Button
+                  className={classes.inlineButton}
+                  variant="contained"
+                  disabled={!from}
+                  onClick={this.signTypedData}
+                >
+                  Sign
+                </Button>
+              }
+            />
+          </FormGroup>
+        </FormControl>
+        <FormControl className={classes.field} component="fieldset">
+          <FormLabel className={classes.field} component="legend">
+            Personal
+          </FormLabel>
+          <FormGroup>
+            <FormControlLabel
+              className={classes.field}
+              label="personal_sign:"
+              labelPlacement="start"
+              control={
+                <Button
+                  className={classes.inlineButton}
+                  variant="contained"
+                  disabled={!from || !message}
+                  onClick={this.personalSign}
+                >
+                  Sign
+                </Button>
+              }
+            />
+            <FormControlLabel
+              className={classes.field}
+              label="personal_ecRecover:"
+              labelPlacement="start"
+              control={
+                <Button
+                  className={classes.inlineButton}
+                  variant="contained"
+                  disabled={!signature}
+                  onClick={this.verify}
+                >
+                  Verify
+                </Button>
+              }
+            />
+          </FormGroup>
+        </FormControl>
         <Button
           className={classes.fluid}
           variant="contained"
+          color="secondary"
           onClick={this.reset}
         >
           Reset

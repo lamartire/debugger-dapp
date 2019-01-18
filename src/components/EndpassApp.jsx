@@ -14,8 +14,8 @@ class EndpassApp extends React.Component {
     super(props)
 
     this.connect = new Connect({
-      appUrl: 'https://auth-dev.endpass.com',
-      // appUrl: 'http://localhost:5000',
+      // appUrl: 'https://auth.endpass.com',
+      appUrl: 'http://localhost:5000'
     })
     this.state = {
       form: {
@@ -26,7 +26,6 @@ class EndpassApp extends React.Component {
       accounts: [],
       currentId: 1,
       authorized: null,
-      accountData: null,
       error: null,
     }
 
@@ -46,29 +45,33 @@ class EndpassApp extends React.Component {
     this.getAccountDataAndInjectWeb3()
   }
 
-  getAccountDataAndInjectWeb3() {
-    return this.connect
-      .getAccountData()
-      .then(res => {
-        const { activeAccount, activeNet } = res
+  async getAccountDataAndInjectWeb3() {
+    try {
+      const { activeAccount, activeNet } = await this.connect.getAccountData()
+      
+      this.connect.injectWeb3()
+      this.connect.sendSettings({
+        selectedAddress: activeAccount, 
+        networkVersion: activeNet
+      })
 
-        this.connect.sendSettings({
-          selectedAddress: activeAccount,
-          networkVersion: activeNet,
-        })
-        this.connect.injectWeb3()
-        this.setState({
-          ...this.state,
-          authorized: true,
-          accountData: res,
-        })
+      this.setState({
+        ...this.state,
+        authorized: true,
+        accounts: [activeAccount],
+        form: {
+          ...this.state.form,
+          from: activeAccount
+        }
       })
-      .catch(err => {
-        this.setState({
-          ...this.state,
-          authorized: false,
-        })
+    } catch (err) {
+      this.setState({
+        ...this.state,
+        authorized: false,
+        accounts: [],
+        accountData: null,
       })
+    }
   }
 
   isNewWeb3() {

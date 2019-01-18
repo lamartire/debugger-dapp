@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import Input from '@material-ui/core/Input'
-import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import FormLabel from '@material-ui/core/FormLabel'
 import FormControl from '@material-ui/core/FormControl'
@@ -65,9 +64,6 @@ class EndpassForm extends React.Component {
 
     return (
       <Fragment>
-        <Typography className={classes.title} align="center" variant="h4">
-          Debug something
-        </Typography>
         {this.renderAccountsSelect()}
         <Grid className={classes.row} container>
           <Grid item xs={6}>

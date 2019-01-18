@@ -213,7 +213,7 @@ class CommonApp extends React.Component {
             onChange={this.onChangeCommonForm}
           />
         ) : (
-          <Typography variant="h4">
+          <Typography variant="caption" color="error">
             Provide web3 before testing or reload page if you switched back from
             Endpass mode
           </Typography>

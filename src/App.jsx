@@ -1,437 +1,69 @@
-import React, { Component, Fragment } from 'react'
+import React from 'react'
 
 import { withStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Card from '@material-ui/core/Card'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormLabel from '@material-ui/core/FormLabel'
-import FormControl from '@material-ui/core/FormControl'
-import FormGroup from '@material-ui/core/FormGroup'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Input from '@material-ui/core/Input'
-import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
+import Card from '@material-ui/core/Card'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
 
-const styles = theme => ({
-  row: {
-    marginBottom: theme.spacing.unit,
-    width: '100%',
-  },
-  field: {
-    display: 'flex',
-    width: '100%',
-    marginRight: 0,
-    marginLeft: 0,
-    marginBottom: theme.spacing.unit,
-  },
-  card: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translateX(-50%) translateY(-50%)',
-    padding: theme.spacing.unit,
-    maxWidth: 480,
-    margin: `${theme.spacing.unit}px auto`,
-  },
-  fluid: {
-    width: '100%',
-  },
-  inlineButton: {
-    flex: '1 1 auto',
-    marginLeft: theme.spacing.unit,
-  },
-})
+import EndpassApp from './components/EndpassApp'
+import CommonApp from './components/CommonApp'
+import styles from './styles'
 
-class App extends Component {
+class App extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      from: '',
-      message: '',
-      signature: '',
-      accounts: [],
-      currentId: 1,
+      endpassMode: false,
     }
-    this.errorNotification = this.errorNotification.bind(this)
-    this.sign = this.sign.bind(this)
-    this.signTypedData = this.signTypedData.bind(this)
-    this.personalSign = this.personalSign.bind(this)
-    this.verify = this.verify.bind(this)
-    this.reset = this.reset.bind(this)
-    this.requestAccount = this.requestAccount.bind(this)
+    this.cachedWeb3 = null
+
+    this.onSwitchEndpassMode = this.onSwitchEndpassMode.bind(this)
   }
 
-  isNewWeb3() {
-    return !Array.isArray(window.web3.accounts)
-  }
+  onSwitchEndpassMode() {
+    const { endpassMode } = this.state
 
-  errorNotification() {
-    /* eslint-disable */
-    new Notification('Action denied', {
-      body: 'An error occured, see console for more details',
-    })
-    /* eslint-enable */
-  }
-
-  makeRequest(method, params, callback) {
-    const { currentId } = this.state
-
-    if (window.ethereum) {
-      window.ethereum.sendAsync(
-        {
-          id: currentId,
-          method,
-          params,
-        },
-        callback,
-      )
-
-      this.setState(state => ({
-        ...state,
-        currentId: state.currentId + 1,
-      }))
-    } else {
-      window.web3.currentProvider.sendAsync(
-        {
-          id: currentId,
-          method,
-          params,
-        },
-        callback,
-      )
-
-      this.setState(state => ({
-        ...state,
-        currentId: state.currentId + 1,
-      }))
+    if (endpassMode) {
+      window.web3 = undefined
     }
-  }
-
-  verify() {
-    const { message, signature } = this.state
-
-    this.makeRequest(
-      'personal_ecRecover',
-      [`0x${Buffer.from(message, 'utf8').toString('hex')}`, signature],
-      (err, { result }) => {
-        if (err) {
-          this.errorNotification()
-          console.error(err)
-          return
-        }
-
-        alert(`Address verified. Recovered address: ${result}`)
-      },
-    )
-  }
-
-  sign() {
-    const { from, message } = this.state
-
-    this.makeRequest(
-      'eth_sign',
-      [from, `0x${Buffer.from(message, 'utf8').toString('hex')}`],
-      (err, { result }) => {
-        if (err) {
-          this.errorNotification()
-          console.error(err)
-          return
-        }
-
-        this.setState(state => ({
-          ...state,
-          signature: result,
-        }))
-      },
-    )
-  }
-
-  signTypedData() {
-    const { from } = this.state
 
     this.setState({
       ...this.state,
-      message: JSON.stringify(
-        [
-          {
-            type: 'string',
-            name: 'Message',
-            value: 'Hi, Alice!',
-          },
-          {
-            type: 'uint32',
-            name: 'A number',
-            value: '1337',
-          },
-        ],
-        null,
-        2,
-      ),
+      endpassMode: !endpassMode,
     })
-
-    this.makeRequest(
-      'eth_signTypedData',
-      [
-        [
-          {
-            type: 'string',
-            name: 'Message',
-            value: 'Hi, Alice!',
-          },
-          {
-            type: 'uint32',
-            name: 'A number',
-            value: '1337',
-          },
-        ],
-        from,
-      ],
-      (err, res) => {
-        if (err) {
-          this.errorNotification()
-          console.error(err)
-          return
-        }
-
-        this.setState(state => ({
-          ...state,
-          signature: res.result,
-        }))
-      },
-    )
-  }
-
-  personalSign() {
-    const { from, message } = this.state
-    const isNewWeb3 = this.isNewWeb3()
-    const params = [from, `0x${Buffer.from(message, 'utf8').toString('hex')}`]
-
-    this.makeRequest(
-      'personal_sign',
-      isNewWeb3 ? params.reverse() : params,
-      (err, { result }) => {
-        if (err) {
-          this.errorNotification()
-          console.error(err)
-          return
-        }
-
-        this.setState(state => ({
-          ...state,
-          signature: result,
-        }))
-      },
-    )
-  }
-
-  requestAccount() {
-    this.makeRequest('eth_accounts', [], (err, { result }) => {
-      if (err) {
-        this.errorNotification()
-        console.error(err)
-        return
-      }
-
-      this.setState(state => ({
-        ...state,
-        accounts: result,
-        from: result[0],
-      }))
-    })
-  }
-
-  reset() {
-    this.setState(state => ({
-      ...state,
-      message: '',
-      signature: '',
-    }))
-  }
-
-  onChangeInputByName(name) {
-    return e => {
-      this.setState({
-        ...this.state,
-        [name]: e.target.value,
-      })
-    }
-  }
-
-  renderWeb3Error() {
-    return (
-      <Typography align="center" variant="h4">
-        Web3 is not exist, provide it before testing!
-      </Typography>
-    )
-  }
-
-  renderAccountsSelect() {
-    const { classes } = this.props
-    const { accounts, from } = this.state
-
-    return (
-      <Select
-        className={classes.fluid}
-        value={from}
-        disabled={accounts.length === 0}
-        onChange={this.onChangeInputByName('from')}
-      >
-        <MenuItem value="" disabled>
-          Select account
-        </MenuItem>
-        {accounts.map(account => (
-          <MenuItem key={account} value={account}>
-            {account}
-          </MenuItem>
-        ))}
-      </Select>
-    )
-  }
-
-  renderSignForm() {
-    const { classes } = this.props
-    const { from, message, signature, accounts } = this.state
-    const isAnyAccountPresent = accounts.length > 0
-
-    return (
-      <Fragment>
-        <Typography align="center" variant="h4">
-          Debug something
-        </Typography>
-        {isAnyAccountPresent && this.renderAccountsSelect()}
-        <Grid className={classes.row} container>
-          <Grid item xs={6}>
-            <Input
-              multiline
-              rows={8}
-              className={classes.fluid}
-              disabled={!from}
-              value={message}
-              placeholder="Enter message to sign..."
-              onChange={this.onChangeInputByName('message')}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <Input
-              multiline
-              rows={8}
-              className={classes.fluid}
-              value={signature}
-              placeholder="Signed data..."
-              onChange={this.onChangeInputByName('signature')}
-            />
-          </Grid>
-        </Grid>
-        <Button
-          className={classes.row}
-          color="primary"
-          variant="contained"
-          onClick={this.requestAccount}
-        >
-          Request account
-        </Button>
-        <FormControl className={classes.field} component="fieldset">
-          <FormLabel className={classes.field} component="legend">
-            Common
-          </FormLabel>
-          <FormGroup>
-            <FormControlLabel
-              className={classes.field}
-              label="eth_sign:"
-              labelPlacement="start"
-              control={
-                <Button
-                  className={classes.inlineButton}
-                  variant="contained"
-                  disabled={!from || !message}
-                  onClick={this.sign}
-                >
-                  Sign
-                </Button>
-              }
-            />
-          </FormGroup>
-        </FormControl>
-        <FormControl className={classes.field} component="fieldset">
-          <FormLabel className={classes.field} component="legend">
-            Legacy typed data (EIP-712 jsonrpc accepted standard)
-          </FormLabel>
-          <FormGroup>
-            <FormControlLabel
-              className={classes.field}
-              label="eth_signTypedData:"
-              labelPlacement="start"
-              control={
-                <Button
-                  className={classes.inlineButton}
-                  variant="contained"
-                  disabled={!from}
-                  onClick={this.signTypedData}
-                >
-                  Sign
-                </Button>
-              }
-            />
-          </FormGroup>
-        </FormControl>
-        <FormControl className={classes.field} component="fieldset">
-          <FormLabel className={classes.field} component="legend">
-            Personal
-          </FormLabel>
-          <FormGroup>
-            <FormControlLabel
-              className={classes.field}
-              label="personal_sign:"
-              labelPlacement="start"
-              control={
-                <Button
-                  className={classes.inlineButton}
-                  variant="contained"
-                  disabled={!from || !message}
-                  onClick={this.personalSign}
-                >
-                  Sign
-                </Button>
-              }
-            />
-            <FormControlLabel
-              className={classes.field}
-              label="personal_ecRecover:"
-              labelPlacement="start"
-              control={
-                <Button
-                  className={classes.inlineButton}
-                  variant="contained"
-                  disabled={!signature}
-                  onClick={this.verify}
-                >
-                  Verify
-                </Button>
-              }
-            />
-          </FormGroup>
-        </FormControl>
-        <Button
-          className={classes.fluid}
-          variant="contained"
-          color="secondary"
-          onClick={this.reset}
-        >
-          Reset
-        </Button>
-      </Fragment>
-    )
   }
 
   render() {
+    const { endpassMode } = this.state
     const { classes } = this.props
 
     return (
-      <Card className={classes.card}>
-        {!window.web3 ? this.renderWeb3Error() : this.renderSignForm()}
-      </Card>
+      <div className={classes.appWrapper}>
+        <Card className={classes.card}>
+          <Grid className={classes.row} container>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={endpassMode}
+                    onChange={this.onSwitchEndpassMode}
+                    color="primary"
+                    value="endpassMode"
+                  />
+                }
+                label="Enable Endpass mode"
+              />
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid xs={12} item>
+              {endpassMode ? <EndpassApp /> : <CommonApp />}
+            </Grid>
+          </Grid>
+        </Card>
+      </div>
     )
   }
 }

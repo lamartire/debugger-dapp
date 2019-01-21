@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/web3-debugger-dapp/precache-manifest.ac8cb83e8fcbe3647d071cfe40daafdd.js"
+  "/debugger-dapp/precache-manifest.62aa673943da63095bf0cedb20676d2e.js"
 );
 
 workbox.clientsClaim();
@@ -28,7 +28,7 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute("/web3-debugger-dapp/index.html", {
+workbox.routing.registerNavigationRoute("/debugger-dapp/index.html", {
   
   blacklist: [/^\/_/,/\/[^\/]+\.[^\/]+$/],
 });

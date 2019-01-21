@@ -1,13 +1,13 @@
 {
-  "main.css": "/web3-debugger-dapp/static/css/main.dad2c995.chunk.css",
-  "main.js": "/web3-debugger-dapp/static/js/main.5130a15a.chunk.js",
-  "main.js.map": "/web3-debugger-dapp/static/js/main.5130a15a.chunk.js.map",
-  "static/js/1.7ba79916.chunk.js": "/web3-debugger-dapp/static/js/1.7ba79916.chunk.js",
-  "static/js/1.7ba79916.chunk.js.map": "/web3-debugger-dapp/static/js/1.7ba79916.chunk.js.map",
-  "runtime~main.js": "/web3-debugger-dapp/static/js/runtime~main.4115f912.js",
-  "runtime~main.js.map": "/web3-debugger-dapp/static/js/runtime~main.4115f912.js.map",
-  "static/css/main.dad2c995.chunk.css.map": "/web3-debugger-dapp/static/css/main.dad2c995.chunk.css.map",
-  "index.html": "/web3-debugger-dapp/index.html",
-  "precache-manifest.ac8cb83e8fcbe3647d071cfe40daafdd.js": "/web3-debugger-dapp/precache-manifest.ac8cb83e8fcbe3647d071cfe40daafdd.js",
-  "service-worker.js": "/web3-debugger-dapp/service-worker.js"
+  "main.css": "/debugger-dapp/static/css/main.dad2c995.chunk.css",
+  "main.js": "/debugger-dapp/static/js/main.c971d149.chunk.js",
+  "main.js.map": "/debugger-dapp/static/js/main.c971d149.chunk.js.map",
+  "static/js/1.7ba79916.chunk.js": "/debugger-dapp/static/js/1.7ba79916.chunk.js",
+  "static/js/1.7ba79916.chunk.js.map": "/debugger-dapp/static/js/1.7ba79916.chunk.js.map",
+  "runtime~main.js": "/debugger-dapp/static/js/runtime~main.fb4f8b4f.js",
+  "runtime~main.js.map": "/debugger-dapp/static/js/runtime~main.fb4f8b4f.js.map",
+  "static/css/main.dad2c995.chunk.css.map": "/debugger-dapp/static/css/main.dad2c995.chunk.css.map",
+  "index.html": "/debugger-dapp/index.html",
+  "precache-manifest.62aa673943da63095bf0cedb20676d2e.js": "/debugger-dapp/precache-manifest.62aa673943da63095bf0cedb20676d2e.js",
+  "service-worker.js": "/debugger-dapp/service-worker.js"
 }

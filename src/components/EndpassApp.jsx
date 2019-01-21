@@ -14,8 +14,7 @@ class EndpassApp extends React.Component {
     super(props)
 
     this.connect = new Connect({
-      // appUrl: 'https://auth.endpass.com',
-      appUrl: 'http://localhost:5000'
+      appUrl: 'https://auth.endpass.com',
     })
     this.state = {
       form: {
@@ -48,11 +47,11 @@ class EndpassApp extends React.Component {
   async getAccountDataAndInjectWeb3() {
     try {
       const { activeAccount, activeNet } = await this.connect.getAccountData()
-      
+
       this.connect.injectWeb3()
       this.connect.sendSettings({
-        selectedAddress: activeAccount, 
-        networkVersion: activeNet
+        selectedAddress: activeAccount,
+        networkVersion: activeNet,
       })
 
       this.setState({
@@ -61,8 +60,8 @@ class EndpassApp extends React.Component {
         accounts: [activeAccount],
         form: {
           ...this.state.form,
-          from: activeAccount
-        }
+          from: activeAccount,
+        },
       })
     } catch (err) {
       this.setState({

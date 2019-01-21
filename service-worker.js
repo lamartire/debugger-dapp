@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/debugger-dapp/precache-manifest.62aa673943da63095bf0cedb20676d2e.js"
+  "/debugger-dapp/precache-manifest.8ca9af9e702ea36f675772ebe5317b19.js"
 );
 
 workbox.clientsClaim();

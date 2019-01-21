@@ -1,13 +1,13 @@
 {
   "main.css": "/debugger-dapp/static/css/main.dad2c995.chunk.css",
-  "main.js": "/debugger-dapp/static/js/main.c971d149.chunk.js",
-  "main.js.map": "/debugger-dapp/static/js/main.c971d149.chunk.js.map",
+  "main.js": "/debugger-dapp/static/js/main.55e7d37a.chunk.js",
+  "main.js.map": "/debugger-dapp/static/js/main.55e7d37a.chunk.js.map",
   "static/js/1.7ba79916.chunk.js": "/debugger-dapp/static/js/1.7ba79916.chunk.js",
   "static/js/1.7ba79916.chunk.js.map": "/debugger-dapp/static/js/1.7ba79916.chunk.js.map",
   "runtime~main.js": "/debugger-dapp/static/js/runtime~main.fb4f8b4f.js",
   "runtime~main.js.map": "/debugger-dapp/static/js/runtime~main.fb4f8b4f.js.map",
   "static/css/main.dad2c995.chunk.css.map": "/debugger-dapp/static/css/main.dad2c995.chunk.css.map",
   "index.html": "/debugger-dapp/index.html",
-  "precache-manifest.62aa673943da63095bf0cedb20676d2e.js": "/debugger-dapp/precache-manifest.62aa673943da63095bf0cedb20676d2e.js",
+  "precache-manifest.8ca9af9e702ea36f675772ebe5317b19.js": "/debugger-dapp/precache-manifest.8ca9af9e702ea36f675772ebe5317b19.js",
   "service-worker.js": "/debugger-dapp/service-worker.js"
 }

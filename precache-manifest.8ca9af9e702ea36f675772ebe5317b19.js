@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/debugger-dapp/static/js/runtime~main.fb4f8b4f.js"
   },
   {
-    "revision": "c971d149b1725f4567a8",
-    "url": "/debugger-dapp/static/js/main.c971d149.chunk.js"
+    "revision": "55e7d37ab2f0b638066e",
+    "url": "/debugger-dapp/static/js/main.55e7d37a.chunk.js"
   },
   {
     "revision": "7ba799164707296d3103",
     "url": "/debugger-dapp/static/js/1.7ba79916.chunk.js"
   },
   {
-    "revision": "c971d149b1725f4567a8",
+    "revision": "55e7d37ab2f0b638066e",
     "url": "/debugger-dapp/static/css/main.dad2c995.chunk.css"
   },
   {
-    "revision": "492920380920863b6b7c1b1f528b3d58",
+    "revision": "86d515b602865e2ba1b86b14a7c2fab8",
     "url": "/debugger-dapp/index.html"
   }
 ];

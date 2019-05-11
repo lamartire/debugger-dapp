@@ -1,5 +1,7 @@
 # Debugger dapp
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/lamartire/debugger-dapp.svg)](https://greenkeeper.io/)
+
 This application created for testing web3 requests and develop wallets and
 other things which uses `web3`.
 
